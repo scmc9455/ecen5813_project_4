@@ -92,6 +92,12 @@ void log_raw_string_kl25z(uint8_t *string)
     {
         /*Add the items to the circular buffer*/
         CB_buffer_add_item(buf_ptr,*string);
+
+        if(buf_ptr->count == buf_ptr->length)
+        {
+            /*flush the circular buffer to the terminal*/
+            UART_circbuf_flush_send(buf_ptr);
+        }
     }
 
     /*flush the circular buffer to the terminal*/
@@ -99,7 +105,7 @@ void log_raw_string_kl25z(uint8_t *string)
   
     return;
 };
-/******log_string**********/
+/******log_string for bbb**********/
 void log_raw_string_bbb(uint8_t string)
 {
     return;
@@ -120,9 +126,11 @@ This description includes both KL25Z and BBB logger functions
 
 void log_raw_int_kl25z(uint8_t number)
 {
+    
+
     return;
 };
-
+/****log_int for bbb******/
 void log_raw_int_bbb(uint8_t number)
 {
     return;

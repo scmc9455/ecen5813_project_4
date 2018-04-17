@@ -140,6 +140,7 @@ This function send the raw string data to the terminal using the transmission me
 depending on the platform
 This description includes both KL25Z and BBB logger functions
 This function assumes that the c-string is null termainated
+The string should be in ASCII characters
 
 @param - string: pointer to the string data to be transmitted
 @return - void
