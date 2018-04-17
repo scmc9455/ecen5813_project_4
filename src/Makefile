@@ -81,7 +81,6 @@ INCLUDES:= -I./../include/common
 endif	
 
 #variables that are needed for the build
-
 ifeq ($(PROJECT),PROJECT1)
 CFLAGS += -DPROJECT1
 TARGET := project1.elf
@@ -95,6 +94,13 @@ else ifeq ($(PROJECT),CMOCKA)
 TARGET :=  unit_tests.elf
 else
 TARGET:= default.elf
+endif
+
+#Logger function enabling
+ifeq ($(LOG),ENABLE)
+CFLAGS += -DLOG_ENABLE
+else
+CFLAGS += -DLOG_OFF
 endif
 
 OBJS:= $(SRCS:.c=.o)
