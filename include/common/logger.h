@@ -108,9 +108,15 @@ typedef enum{
 #define LOG_FLUSH(); {}
 #define LOG_RAW_ITEM(log_structure); {}
 #endif
-
+/*sets a global variable for the log buffer if log is enabled*/
 #ifdef LOG_ENABLE
 CB_t *buf_ptr;
+#endif
+/*Define to be able to remove printf and replace with a blank if not BBB or HOST*/
+#if defined (BBB) || defined (HOST)
+#define LOG_PRINTF(x);  printf(x);
+#else
+#define LOG_PRINTF(x);  {}
 #endif
 
 /*********************************************************************************************/
@@ -163,9 +169,9 @@ This description includes both KL25Z and BBB logger functions
 @return - void
 **********************************************************************************************/
 
-void log_raw_int_kl25z(uint8_t number);
+void log_raw_int_kl25z(uint32_t number);
 
-void log_raw_int_bbb(uint8_t number);
+void log_raw_int_bbb(uint32_t number);
 
 /*********************************************************************************************/
 /***********************************log_flush*************************************************/
@@ -200,6 +206,21 @@ This description includes both KL25Z and BBB logger functions
 void log_raw_item_kl25z(log_item_t log_structure);
 
 void log_raw_item_bbb(log_item_t log_structure);
+
+/*********************************************************************************************/
+/*********************************BBB_circbuf_flush_send**************************************/
+/**********************************************************************************************
+@brief- This function configures the BBB to empty the circbuf completely
+
+This function empties the circular buffer completely when called
+This function is blocking
+This function specifically is used to printf to the terminal for the BBB
+
+@param - buf_ptr: address of the circular buff that will send data
+@return -void
+**********************************************************************************************/
+
+void BBB_circbuf_flush_send(CB_t *buf_ptr);
 
 #endif /*__LOGGER_H__*/
 

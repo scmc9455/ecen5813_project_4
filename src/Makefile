@@ -99,6 +99,7 @@ endif
 #Logger function enabling
 ifeq ($(LOG),ENABLE)
 CFLAGS += -DLOG_ENABLE
+SRCS += ./logger.c
 else
 CFLAGS += -DLOG_OFF
 endif
