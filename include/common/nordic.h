@@ -36,17 +36,36 @@ Created for ECEN5813
 
 #include <stdint.h>
 #include <stdlib.h>
+#ifdef KL25Z
 #include "gpio.h"
 #include "spi.h"
+#elif defined (BBB) || (BBB_PRO)
+#include "spi.h" /*This would need to be changed for BBB*/
+#include "gpio.h" /*This would need to be changed for BBB*/
+#endif
+
 
 /*Using PIN5 as the Chip enable PTD5, these MACRO can only be used after SPI_CONFIG has run*/
 /*To be used in the main program functions to enable and disable the NRF chip*/
+#ifdef KL25Z
 #define NRF_CHIP_ENABLE       (__GPIOD_PSOR |= CHIP_EN_PTD5)
 #define NRF_CHIP_DISABLE      (__GPIOD_PCOR |= CHIP_EN_PTD5)
 /*Chip select PTD6 (active low), these MACRO can only be used after SPI_CONFIG has run*/
 /*MARCO used to handle the /CS pin functionality and go around the built in SPI CS pin*/
 #define NRF_TRANSMIT_ENABLE   (__GPIOD_PCOR |= CHIP_SEL_PTD6)
 #define NRF_TRANSMIT_DISABLE  (__GPIOD_PSOR |= CHIP_SEL_PTD6)
+
+#elif defined (BBB) || (BBB_PRO)
+/*Using PIN5 as the Chip enable PTD5, these MACRO can only be used after SPI_CONFIG has run*/
+/*To be used in the main program functions to enable and disable the NRF chip*/
+#define NRF_CHIP_ENABLE       {}
+#define NRF_CHIP_DISABLE      {}
+/*Chip select PTD6 (active low), these MACRO can only be used after SPI_CONFIG has run*/
+/*MARCO used to handle the /CS pin functionality and go around the built in SPI CS pin*/
+#define NRF_TRANSMIT_ENABLE   {}
+#define NRF_TRANSMIT_DISABLE  {}
+#endif
+
 
 /*Commands for NRF*/
 #define __R_REGISTER           (0x00) /*ORed with*/

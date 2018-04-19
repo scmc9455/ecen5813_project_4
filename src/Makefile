@@ -83,12 +83,15 @@ endif
 #variables that are needed for the build
 ifeq ($(PROJECT),PROJECT1)
 CFLAGS += -DPROJECT1
+SRCS += ./project1.c
 TARGET := project1.elf
 else ifeq ($(PROJECT),PROJECT2)
 TARGET := project2.elf
+SRCS += ./project2.c
 CFLAGS += -DPROJECT2
 else ifeq ($(PROJECT),PROJECT3)
 CFLAGS += -DPROJECT3
+SRCS += ./project3.c
 TARGET := project3.elf
 else ifeq ($(PROJECT),CMOCKA)
 TARGET :=  unit_tests.elf

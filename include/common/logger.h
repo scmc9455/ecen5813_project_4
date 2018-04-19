@@ -35,17 +35,8 @@ Created for ECEN5813
 
 #include "circbuf.h"
 #include "conversion.h"
+#include "memory.h"
 #include <stdint.h>
-
-/*Structure for the logger packet to be sent out*/
-typedef struct{
-  log_id_e    log_id;
-  module_id_e module_id;
-  <type32>    timestamp;
-  <type32>    log_length;
-  *<type8>    payload;
-  <type32>    checksum;
-} log_item_t;
 
 /*Enumeration of the log id to be included in the packet*/
 typedef enum{
@@ -72,11 +63,21 @@ typedef enum{
   CORE_DUMP = 20
 } log_id_e;
 
-
+/*Enumeration for the module id*/
 typedef enum{
   PROJECT4,
   TEST
 } module_id_e;
+
+/*Structure for the logger packet to be sent out*/
+typedef struct{
+  log_id_e    log_id;
+  module_id_e module_id;
+  uint32_t    timestamp;
+  uint32_t    log_length;
+  uint8_t     *payload;
+  uint32_t    checksum;
+} log_item_t;
 
 /**************************/
 /*List of Logger MACROs to be able to enable and disable the logger*/
@@ -84,8 +85,8 @@ typedef enum{
 /*************************/
 /*****Marcro Functions for the KL25Z**************/
 #if defined (KL25Z) && defined (LOG_ENABLE)
-#define LOG_RAW_DATA(*data, len); {log_raw_data_kl25z(*data, len);}
-#define LOG_RAW_STRING(*string); {log_raw_string_kl25z(*string);}
+#define LOG_RAW_DATA(data, len); {log_raw_data_kl25z(data, len);}
+#define LOG_RAW_STRING(string); {log_raw_string_kl25z(string);}
 #define LOG_RAW_INT(number); {log_raw_int_kl25z(number);}
 #define LOG_FLUSH(); {log_flush_kl25z();}
 #define LOG_RAW_ITEM(log_structure); {log_raw_item_kl25z(log_structure);}
@@ -93,8 +94,8 @@ typedef enum{
 
 /*****Marcro Functions for the BBB**************/
 #if defined (BBB) && defined (LOG_ENABLE)
-#define LOG_RAW_DATA(*data, len); {log_raw_data_bbb(*data, len);}
-#define LOG_RAW_STRING(*string); {log_raw_string_bbb(*string);}
+#define LOG_RAW_DATA(data, len); {log_raw_data_bbb(data, len);}
+#define LOG_RAW_STRING(string); {log_raw_string_bbb(string);}
 #define LOG_RAW_INT(number); {log_raw_int_bbb(number);}
 #define LOG_FLUSH(); {log_flush_bbb();}
 #define LOG_RAW_ITEM(log_structure); {log_raw_item_bb(log_structure);}
@@ -102,22 +103,27 @@ typedef enum{
 
 /*****Marcro Functions for turning the logger off**************/
 #ifdef LOG_OFF
-#define LOG_RAW_DATA(*data, len); {}
+#define LOG_RAW_DATA(data, len); {}
 #define LOG_RAW_STRING(string); {}
 #define LOG_RAW_INT(number); {}
 #define LOG_FLUSH(); {}
 #define LOG_RAW_ITEM(log_structure); {}
-#endif
+#endif /*LOG_OFF*/
 /*sets a global variable for the log buffer if log is enabled*/
 #ifdef LOG_ENABLE
 CB_t *buf_ptr;
-#endif
+#endif /*LOG_ENABLE*/
 /*Define to be able to remove printf and replace with a blank if not BBB or HOST*/
 #if defined (BBB) || defined (HOST)
-#define LOG_PRINTF(x);  printf(x);
-#else
-#define LOG_PRINTF(x);  {}
-#endif
+#define LOG_PRINTF(x,y);  printf(x,y);
+#define UART_SEND(x);    {}
+#elif defined (KL25Z) /*KL25Z*/
+#define LOG_PRINTF(x,y);  {}
+#define UART_SEND(x);   UART_circbuf_flush_send(x);
+#else /*ELSE*/
+#define LOG_PRINTF(x,y);  {}
+#define UART_SEND(x);   {}
+#endif /*BBB OR HOST*/
 
 /*********************************************************************************************/
 /***********************************log_raw_data**********************************************/
@@ -154,7 +160,7 @@ The string should be in ASCII characters
 
 void log_raw_string_kl25z(uint8_t *string);
 
-void log_raw_string_bbb(uint8_t string);
+void log_raw_string_bbb(uint8_t *string);
 
 /*********************************************************************************************/
 /***********************************log_raw_int***********************************************/
@@ -164,6 +170,7 @@ void log_raw_string_bbb(uint8_t string);
 This function send the raw integer data to the terminal using the transmission medium 
 depending on the platform.Before sending this integer it converts the data using ITOA
 This description includes both KL25Z and BBB logger functions
+*Circular Buffer must be at least 10 bytes long
 
 @param - number: number data to be transmitted
 @return - void
@@ -198,14 +205,19 @@ void log_flush_bbb(void);
 This function sends the log structure item to the terminal using the transmission medium 
 depending on the platform
 This description includes both KL25Z and BBB logger functions
+***The circular buffer needs to be large enough to make sure that the structure over head 
+can be handled
+
+**Structure looks like the following****
+Header - Payload - Footer
 
 @param - log_structure: log item structure that contains all the log details
 @rerturn - void
 **********************************************************************************************/
 
-void log_raw_item_kl25z(log_item_t log_structure);
+void log_raw_item_kl25z(log_item_t *log_structure);
 
-void log_raw_item_bbb(log_item_t log_structure);
+void log_raw_item_bbb(log_item_t *log_structure);
 
 /*********************************************************************************************/
 /*********************************BBB_circbuf_flush_send**************************************/

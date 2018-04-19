@@ -44,7 +44,9 @@ Created for ECEN5813
 
 void nrf_init(void)
 {
+    #ifdef KL25Z
     __GPIOD_PSOR |= CHIP_EN_PTD5; /*Set the PTD5 to output to enable the NRF*/
+    #endif
     nrf_write_config(NRF_CONFIG_START); /*Powers up the NRF device*/
     return;
 }
