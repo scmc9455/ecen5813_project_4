@@ -3,12 +3,12 @@
 
 @brief - main program header file
 
-This program only calls functions from project2
+This program only calls functions from project4
 This also include all the necessary libraries and headers that are used in each of the files
 
 @author - Scott McElroy
 
-@date - February 25, 2018
+@date - April 19, 2018
 
 Created for ECEN5813
 **********************************************************************************************/
@@ -26,6 +26,10 @@ Created for ECEN5813
 #include <stdio.h>
 #endif
 
+#ifdef PROJECT4
+#include "project4.h"
+#endif
+
 #ifdef KL25Z
 #include "MKL25Z4.h"
 #endif
@@ -35,6 +39,11 @@ Created for ECEN5813
 #endif
 
 #include <stdint.h>
+
+#ifdef PROJECT4
+/*Adding a global variable for the circular buffer pointer*/
+CB_t *buf_ptr;
+#endif
 
 int main(void)
 {
@@ -49,6 +58,10 @@ int main(void)
     #ifdef PROJECT3
         project3();
     #endif   
+
+    #ifdef PROJECT4
+        project4();
+    #endif
 
     return 0;
 }

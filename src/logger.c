@@ -40,9 +40,6 @@ This description includes both KL25Z and BBB logger functions
 
 void log_raw_data_kl25z(uint8_t *data, uint32_t len)
 {
-    /**Variables to be used***/
-    uint32_t length = len;
-
     /*null pointer protection from a global buffer pointer*/
     if(buf_ptr == NULL)
     {
@@ -50,11 +47,10 @@ void log_raw_data_kl25z(uint8_t *data, uint32_t len)
     }
     
     /*fill the circular buffer until the length is finished*/
-    while(length > 0)
+    for(uint32_t i=0; i<len ;i++)
     {
         /*add this data piece to the circular buffer*/
-        CB_buffer_add_item(buf_ptr, *data);
-        length--;
+        CB_buffer_add_item(buf_ptr, *(data+i));
     }
     
     /*flush the circular buffer to the terminal*/
@@ -65,25 +61,24 @@ void log_raw_data_kl25z(uint8_t *data, uint32_t len)
 /****************log_data function for the BBB****************8**/
 void log_raw_data_bbb(uint8_t *data, uint32_t len)
 {
-    /**Variables to be used***/
-    uint32_t length = len;
-
     /*null pointer protection from a global buffer pointer*/
     if(buf_ptr == NULL)
     {
         return;
     }
-    
+
     /*fill the circular buffer until the length is finished*/
-    while(length > 0)
+    for(uint32_t i=0; i<len ;i++)
     {
         /*add this data piece to the circular buffer*/
-        CB_buffer_add_item(buf_ptr, *data);
-        length--;
+        CB_buffer_add_item(buf_ptr, *(data+i));
     }
     
     /*flush the circular buffer to the terminal*/
     BBB_circbuf_flush_send(buf_ptr);
+
+    /*Add a newline character to clean script*/
+    PRINT_NL;
 
     return;
 }
@@ -112,7 +107,7 @@ void log_raw_string_kl25z(uint8_t *string)
     }
  
     /*Store address so it can be incremented*/
-    uint8_t i=0; /*This will be used to increment the address pointer*/
+    uint32_t i=0; /*This will be used to increment the address pointer*/
 
     /*statement checks for the null pointer*/
     if(string == NULL)
@@ -135,6 +130,9 @@ void log_raw_string_kl25z(uint8_t *string)
         i += 1; /*Increment i by i*/
     }
 
+    /*Null terminal the string so logger can determine the end*/
+    CB_buffer_add_item(buf_ptr,*(string+i));
+
     /*flush the circular buffer to the terminal*/
     UART_SEND(buf_ptr);
   
@@ -150,7 +148,7 @@ void log_raw_string_bbb(uint8_t *string)
     }
 
     /*Store address so it can be incremented*/
-    uint8_t i=0; /*This will be used to increment the address pointer*/
+    uint32_t i=0; /*This will be used to increment the address pointer*/
 
     /*statement checks for the null pointer*/
     if(string == NULL)
@@ -173,8 +171,14 @@ void log_raw_string_bbb(uint8_t *string)
         i += 1; /*Increment i by i*/
     }
 
+    /*Null terminal the string so logger can determine the end*/
+    CB_buffer_add_item(buf_ptr,*(string+i));
+
     /*flush the circular buffer to the terminal*/
     BBB_circbuf_flush_send(buf_ptr);
+
+    /*Adding a new line to clean up file*/
+    PRINT_NL;
 
     return;
 }
@@ -247,9 +251,9 @@ void log_raw_int_bbb(uint32_t number)
     /*The base is to be converted to base 10 ASCII*/
     
     /*Below adds the items from the converted function to the buffer*/
-    for(uint8_t i=0; i<bytes; i++)
+    for(uint8_t i=bytes; i>0; i--)
     {
-        CB_buffer_add_item(buf_ptr, *(number_ptr+i));
+        CB_buffer_add_item(buf_ptr, *(number_ptr+(i-1)));
     }
     
     /*Flush the buffer to the terminal*/
@@ -257,6 +261,9 @@ void log_raw_int_bbb(uint32_t number)
 
     /*Free the reserved memory*/
     free_words(number_ptr);
+
+    /*Add a new line for clean log file*/
+    PRINT_NL;
 
     return;
 }
@@ -298,6 +305,9 @@ void log_flush_bbb(void)
 
     /*Flush the buffer to the terminal*/
     BBB_circbuf_flush_send(buf_ptr);
+
+    /*Add a new line for a clean log*/
+    PRINT_NL;
 
     return;
 }
@@ -387,19 +397,15 @@ void log_raw_item_bbb(log_item_t *log_structure)
     /***Start loading the circular buffer with the structure elements**/
     /*Load the *LOG ID* to buffer*/
     CB_buffer_add_item(buf_ptr, log_structure->log_id);
+
     /*Load the *MODULE ID* to buffer*/
     CB_buffer_add_item(buf_ptr, log_structure->module_id);
+
     /*Load the *TIMESTAMP* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
-    for(uint8_t i=0; i<4; i++)
-    {
-        CB_buffer_add_item(buf_ptr, log_structure->timestamp);
-    }
+    CB_buffer_add_item(buf_ptr, log_structure->timestamp);
 
     /*Load the *log_length* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
-    for(uint8_t i=0; i<4; i++)
-    {
-        CB_buffer_add_item(buf_ptr, log_structure->log_length);
-    }
+    CB_buffer_add_item(buf_ptr, log_structure->log_length);
 
     /*flush the buffer to make sure their is room for the payload*/
     BBB_circbuf_flush_send(buf_ptr);
@@ -422,6 +428,9 @@ void log_raw_item_bbb(log_item_t *log_structure)
 
     /*flush the buffer to complete the packets transmission*/
     BBB_circbuf_flush_send(buf_ptr);
+
+    /*Add a new line for a clean log*/
+    PRINT_NL;
 
     return;
 }
@@ -458,7 +467,7 @@ void BBB_circbuf_flush_send(CB_t *buf_ptr)
         CB_buffer_remove_item(buf_ptr,item_ptr);
 
         /*Send the local variable to the UART to be sent off board*/
-        LOG_PRINTF(("%d "),item)
+        LOG_PRINTF(("%X "),item);
     }
 
     return;

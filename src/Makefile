@@ -93,6 +93,10 @@ else ifeq ($(PROJECT),PROJECT3)
 CFLAGS += -DPROJECT3
 SRCS += ./project3.c
 TARGET := project3.elf
+else ifeq ($(PROJECT),PROJECT4)
+CFLAGS += -DPROJECT4
+SRCS += ./project4.c
+TARGET := project4.elf
 else ifeq ($(PROJECT),CMOCKA)
 TARGET :=  unit_tests.elf
 else
@@ -102,7 +106,6 @@ endif
 #Logger function enabling
 ifeq ($(LOG),ENABLE)
 CFLAGS += -DLOG_ENABLE
-SRCS += ./logger.c
 else
 CFLAGS += -DLOG_OFF
 endif

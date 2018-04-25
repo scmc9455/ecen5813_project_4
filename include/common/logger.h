@@ -15,6 +15,10 @@ This file header contains functions
 4. log_flush
 5. log_item
 
+*sets a global variable for the log buffer if log is enabled*
+if LOG_ENABLE is turned on, then a global variable needs to be used
+CB_t *buf_ptr;
+
 @author - Scott McElroy
 
 @date - April 15, 2018
@@ -65,7 +69,7 @@ typedef enum{
 
 /*Enumeration for the module id*/
 typedef enum{
-  PROJECT4,
+  PROJECT_4,
   TEST
 } module_id_e;
 
@@ -93,12 +97,12 @@ typedef struct{
 #endif
 
 /*****Marcro Functions for the BBB**************/
-#if defined (BBB) && defined (LOG_ENABLE)
+#if (defined (BBB) || defined (HOST)) && defined (LOG_ENABLE)
 #define LOG_RAW_DATA(data, len); {log_raw_data_bbb(data, len);}
 #define LOG_RAW_STRING(string); {log_raw_string_bbb(string);}
 #define LOG_RAW_INT(number); {log_raw_int_bbb(number);}
 #define LOG_FLUSH(); {log_flush_bbb();}
-#define LOG_RAW_ITEM(log_structure); {log_raw_item_bb(log_structure);}
+#define LOG_RAW_ITEM(log_structure); {log_raw_item_bbb(log_structure);}
 #endif
 
 /*****Marcro Functions for turning the logger off**************/
@@ -109,22 +113,23 @@ typedef struct{
 #define LOG_FLUSH(); {}
 #define LOG_RAW_ITEM(log_structure); {}
 #endif /*LOG_OFF*/
-/*sets a global variable for the log buffer if log is enabled*/
-#ifdef LOG_ENABLE
-CB_t *buf_ptr;
-#endif /*LOG_ENABLE*/
+
+/*LOG_ENABLE*/
 /*Define to be able to remove printf and replace with a blank if not BBB or HOST*/
 #if defined (BBB) || defined (HOST)
 #define LOG_PRINTF(x,y);  printf(x,y);
+#define PRINT_NL         printf("\n")
 #define UART_SEND(x);    {}
 #elif defined (KL25Z) /*KL25Z*/
 #define LOG_PRINTF(x,y);  {}
+#define PRINT_NL         {}
 #define UART_SEND(x);   UART_circbuf_flush_send(x);
 #else /*ELSE*/
 #define LOG_PRINTF(x,y);  {}
 #define UART_SEND(x);   {}
 #endif /*BBB OR HOST*/
 
+extern CB_t *buf_ptr;
 /*********************************************************************************************/
 /***********************************log_raw_data**********************************************/
 /**********************************************************************************************

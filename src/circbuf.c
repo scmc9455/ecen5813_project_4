@@ -66,7 +66,7 @@ CB_e CB_init(CB_t **buf_ptr, uint32_t length)
     }else{
         /*Second the buffer itself needs to be setup*/
         /*The line below dynamically allocates the structure for the circular buffer*/
-        (*buf_ptr)->base = (void *)malloc(sizeof(buf_ptr)*length);
+        (*buf_ptr)->base = (void *)malloc(sizeof((*buf_ptr)->base)*length);
     }
    
     /*These next lines then store the values into the structure*/
@@ -149,6 +149,7 @@ CB_e CB_buffer_add_item(CB_t *buf_ptr, uint8_t data)
     {
         *(buf_ptr->head) = data;
         buf_ptr->count++;
+
         /*don't increament the head for the first value*/
         return CB_SUCCESS;
     }
@@ -207,20 +208,20 @@ CB_e CB_buffer_remove_item(CB_t *buf_ptr,uint8_t *data)
 
     if(buf_ptr->head == buf_ptr->tail)
     {
-        *data = *buf_ptr->tail;
+        *data = *(buf_ptr->tail);
         buf_ptr->count--;
         return CB_SUCCESS;
     }
 
     /*Store the oldest item in the buffer into the data variable*/
-    *data = *buf_ptr->tail;
+    *data = *(buf_ptr->tail);
     
     /*check to see if the tail is at the beginning of the buffer*/
     if((buf_ptr->tail) == (buf_ptr->base+((buf_ptr)->length-1)))
     {
         /*if the tail is at the beginning, it goes back to the end*/
         /*this wraps arounds to the end*/
-        (buf_ptr)->tail = ((buf_ptr)->base); 
+        (buf_ptr)->tail = ((buf_ptr)->base);
     }else{
         /*the buffer tail is decreased by one*/
         buf_ptr->tail++;
