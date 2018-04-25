@@ -75,11 +75,19 @@ void project4(void)
     /*Call the log string function macro*/
     LOG_RAW_STRING(string_ptr);
 
+    /*time stamp print out*/
+    time_value = TIMESTAMP(time_value);
+    LOG_RAW_DATA(time_value_ptr,4);
+
     /*Release the allocated memory*/
     free_words(string_ptr);
 
     /*****************Integer Test*************************/
     LOG_RAW_INT(12345);
+
+    /*time stamp print out*/
+    time_value = TIMESTAMP(time_value);
+    LOG_RAW_DATA(time_value_ptr,4);
 
     /************Flush buffer Test*************************/
     /*Fill buffer with items that need to be flushed*/
@@ -89,6 +97,10 @@ void project4(void)
     }
 
     LOG_FLUSH();
+
+    /*time stamp print out*/
+    time_value = TIMESTAMP(time_value);
+    LOG_RAW_DATA(time_value_ptr,4);
 
     /***************Packet Log Test************************/
     /*Initial the data of a packet*/
@@ -108,13 +120,16 @@ void project4(void)
     /*fill the packet*/
     packet.log_id = CORE_DUMP;
     packet.module_id = TEST;
-    packet.timestamp = 5;
+    packet.timestamp = TIMESTAMP(time_value);
     packet.log_length = packet_len;
     packet.payload = packet_data_ptr;
-    packet.checksum = 0xFF;
+    LOG_CHECKSUM(packet_ptr);
 
     LOG_RAW_ITEM(packet_ptr);
-    while(packet_ptr);
+
+    /*time stamp print out*/
+    time_value = TIMESTAMP(time_value);
+    LOG_RAW_DATA(time_value_ptr,4);
 }
 
 /**********************************************************************************************/

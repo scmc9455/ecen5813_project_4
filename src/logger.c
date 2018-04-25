@@ -14,6 +14,7 @@ This file header contains functions
 3. log_integer
 4. log_flush
 5. log_item
+6. checksum
 
 @author - Scott McElroy
 
@@ -402,11 +403,19 @@ void log_raw_item_bbb(log_item_t *log_structure)
     CB_buffer_add_item(buf_ptr, log_structure->module_id);
 
     /*Load the *TIMESTAMP* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
-    CB_buffer_add_item(buf_ptr, log_structure->timestamp);
-
+    uint32_t timestamp = log_structure->timestamp;
+    uint8_t *timestamp_ptr = (uint8_t *)(&timestamp);
+    for(uint8_t i=0; i<4; i++)
+    {
+        CB_buffer_add_item(buf_ptr, *(timestamp_ptr+i));
+    }
     /*Load the *log_length* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
-    CB_buffer_add_item(buf_ptr, log_structure->log_length);
-
+    uint32_t log_length = log_structure->log_length;
+    uint8_t *log_length_ptr = (uint8_t *)(&log_length);
+    for(uint8_t i=0; i<4; i++)
+    {
+        CB_buffer_add_item(buf_ptr, *(log_length_ptr+i));
+    }
     /*flush the buffer to make sure their is room for the payload*/
     BBB_circbuf_flush_send(buf_ptr);
 
@@ -424,8 +433,12 @@ void log_raw_item_bbb(log_item_t *log_structure)
     }
 
     /*Load the *CHECKSUM* to buffer*/
-    CB_buffer_add_item(buf_ptr, log_structure->checksum);
-
+    uint32_t checksum = log_structure->checksum;
+    uint8_t *checksum_ptr = (uint8_t *)(&checksum);
+    for(uint8_t i=0; i<4; i++)
+    {
+        CB_buffer_add_item(buf_ptr, *(checksum_ptr+i));
+    }
     /*flush the buffer to complete the packets transmission*/
     BBB_circbuf_flush_send(buf_ptr);
 
@@ -471,6 +484,89 @@ void BBB_circbuf_flush_send(CB_t *buf_ptr)
     }
 
     return;
+}
+
+/*********************************************************************************************/
+/*********************************checksum_add************************************************/
+/**********************************************************************************************
+@brief- This function calculates the checksum for the log packet
+
+A packet is passed into the function and the checksum is calculated by adding
+all the binary "1" and returning a 32 bit value
+This will update the checksum value in the log_structure
+
+@param - log_structure: pointer to packet structure to be calculated
+@return - void
+**********************************************************************************************/
+
+void checksum_add(log_item_t *log_structure)
+{
+    /*Need the variable for the return checksum*/
+    uint32_t checksum = 0;
+    uint32_t log_id = (uint32_t)log_structure->log_id;
+    uint32_t module_id = (uint32_t)log_structure->module_id;
+    uint32_t timestamp = (log_structure->timestamp);
+    uint32_t log_length = (log_structure->log_length);
+
+    /*Count the number of binary one in the log_id and put them into count*/
+    while(log_id > 0)
+    {
+        if((log_id & 0x1) == 0x1)
+        {
+            checksum +=1;
+        }
+        log_id = log_id >> 1; /*binary shift left to capture the next value*/
+    }
+
+    /*Count the number of binary one in the module_id and put them into count*/
+    while(module_id > 0)
+    {
+        if((module_id & 0x1) == 0x1)
+        {
+            checksum +=1;
+        }
+        module_id = module_id >> 1; /*binary shift left to capture the next value*/
+    }
+
+    /*Count the number of binary one in the timestamp and put them into count*/
+    while(timestamp > 0)
+    {
+        if((timestamp & 0x1) == 0x1)
+        {
+            checksum +=1;
+        }
+        timestamp = timestamp >> 1; /*binary shift left to capture the next value*/
+    }
+
+    /*Count the number of binary one in the log length and put them into count*/
+    while(log_length > 0)
+    {
+        if((log_length & 0x1) == 0x1)
+        {
+            checksum +=1;
+        }
+        log_length = log_length >> 1; /*binary shift left to capture the next value*/
+    }
+
+    for(uint32_t i=0; i<(log_structure->log_length); i++)
+    {
+        /*Load a value from the payload pointer into the variable to be used*/
+        uint8_t payload_value = *((log_structure->payload)+i);
+        while(payload_value > 0)
+        {
+            if((payload_value & 0x1) == 0x1)
+            {
+                checksum +=1;
+            }
+            payload_value = payload_value >> 1; /*binary shift left to capture the next value*/
+        }
+    }
+    
+    /*Add the value to the checksum in the log_structure*/
+    (log_structure->checksum) = checksum;
+
+    return;
+
 }
 
 /*********************************************************************************************/

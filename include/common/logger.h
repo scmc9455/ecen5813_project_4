@@ -94,6 +94,7 @@ typedef struct{
 #define LOG_RAW_INT(number); {log_raw_int_kl25z(number);}
 #define LOG_FLUSH(); {log_flush_kl25z();}
 #define LOG_RAW_ITEM(log_structure); {log_raw_item_kl25z(log_structure);}
+#define LOG_CHECKSUM(log_structure); {checksum_add(log_structure);}
 #endif
 
 /*****Marcro Functions for the BBB**************/
@@ -103,6 +104,7 @@ typedef struct{
 #define LOG_RAW_INT(number); {log_raw_int_bbb(number);}
 #define LOG_FLUSH(); {log_flush_bbb();}
 #define LOG_RAW_ITEM(log_structure); {log_raw_item_bbb(log_structure);}
+#define LOG_CHECKSUM(log_structure); {checksum_add(log_structure);}
 #endif
 
 /*****Marcro Functions for turning the logger off**************/
@@ -112,6 +114,7 @@ typedef struct{
 #define LOG_RAW_INT(number); {}
 #define LOG_FLUSH(); {}
 #define LOG_RAW_ITEM(log_structure); {}
+#define LOG_CHECKSUM(log_structure); {}
 #endif /*LOG_OFF*/
 
 /*LOG_ENABLE*/
@@ -238,6 +241,20 @@ This function specifically is used to printf to the terminal for the BBB
 **********************************************************************************************/
 
 void BBB_circbuf_flush_send(CB_t *buf_ptr);
+
+/*********************************************************************************************/
+/*********************************checksum_add************************************************/
+/**********************************************************************************************
+@brief- This function calculates the checksum for the log packet
+
+A packet is passed into the function and the checksum is calculated by adding
+all the binary "1" and returning a 32 bit value
+
+@param - log_structure: pointer to packet structure to be calculated
+@return - checksum: value of the check sum
+**********************************************************************************************/
+
+void checksum_add(log_item_t *log_structure);
 
 #endif /*__LOGGER_H__*/
 
