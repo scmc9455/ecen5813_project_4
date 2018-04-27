@@ -345,20 +345,24 @@ void log_raw_item_kl25z(log_item_t *log_structure)
     /***Start loading the circular buffer with the structure elements**/
     /*Load the *LOG ID* to buffer*/
     CB_buffer_add_item(buf_ptr, log_structure->log_id);
+
     /*Load the *MODULE ID* to buffer*/
     CB_buffer_add_item(buf_ptr, log_structure->module_id);
+
     /*Load the *TIMESTAMP* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
+    uint32_t timestamp = log_structure->timestamp;
+    uint8_t *timestamp_ptr = (uint8_t *)(&timestamp);
     for(uint8_t i=0; i<4; i++)
     {
-        CB_buffer_add_item(buf_ptr, log_structure->timestamp);
+        CB_buffer_add_item(buf_ptr, *(timestamp_ptr+i));
     }
-
     /*Load the *log_length* to buffer, needs to run 4 times because it 32 bits (4 bytes)*/
+    uint32_t log_length = log_structure->log_length;
+    uint8_t *log_length_ptr = (uint8_t *)(&log_length);
     for(uint8_t i=0; i<4; i++)
     {
-        CB_buffer_add_item(buf_ptr, log_structure->log_length);
+        CB_buffer_add_item(buf_ptr, *(log_length_ptr+i));
     }
-
     /*flush the buffer to make sure their is room for the payload*/
     UART_SEND(buf_ptr);
 
@@ -376,13 +380,21 @@ void log_raw_item_kl25z(log_item_t *log_structure)
     }
 
     /*Load the *CHECKSUM* to buffer*/
-    CB_buffer_add_item(buf_ptr, log_structure->checksum);
-
+    uint32_t checksum = log_structure->checksum;
+    uint8_t *checksum_ptr = (uint8_t *)(&checksum);
+    for(uint8_t i=0; i<4; i++)
+    {
+        CB_buffer_add_item(buf_ptr, *(checksum_ptr+i));
+    }
     /*flush the buffer to complete the packets transmission*/
     UART_SEND(buf_ptr);
 
+    /*Add a new line for a clean log*/
+    PRINT_NL;
+
     return;
 }
+
 /**********BBB_structure print**********/
 void log_raw_item_bbb(log_item_t *log_structure)
 {
@@ -391,7 +403,6 @@ void log_raw_item_bbb(log_item_t *log_structure)
     {
         return;
     }
-
     /*First flush the buffer to make sure their is room for the structure items*/
     BBB_circbuf_flush_send(buf_ptr);
 

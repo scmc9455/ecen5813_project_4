@@ -36,10 +36,9 @@ Created for ECEN5813
 @brief - This function is the main code that will analyze the time it take to run my_mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
-**********************************************************************************************/
+@return - nanosecond: time the profiler took to run **********************************************************************************************/
 
-void profiler_my_memset_bbb(uint32_t memset_test_len);
+uint32_t profiler_my_memset_bbb(uint32_t memset_test_len);
 
 /*********************************************************************************************/
 /****************************profiler_my_memmove_bbb****************************************/
@@ -47,10 +46,10 @@ void profiler_my_memset_bbb(uint32_t memset_test_len);
 @brief - This function is the main code that will analyze the time it take to run my_mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
+@return - nanosecond: time the profiler took to run
 **********************************************************************************************/
 
-void profiler_my_memmove_bbb(uint32_t memmove_test_len);
+uint32_t profiler_my_memmove_bbb(uint32_t memmove_test_len);
 
 /*********************************************************************************************/
 /****************************profiler_stdlib_memmove_bbb**************************************/
@@ -58,10 +57,9 @@ void profiler_my_memmove_bbb(uint32_t memmove_test_len);
 @brief - This function is the main code that will analyze the time it take to run mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
-**********************************************************************************************/
+@return - nanosecond: time the profiler took to run **********************************************************************************************/
 
-void profiler_stdlib_memmove_bbb(uint32_t memmove_test_len);
+uint32_t profiler_stdlib_memmove_bbb(uint32_t memmove_test_len);
 
 /*********************************************************************************************/
 /*************************profiler_stdlib_memset_bbb****************************************/
@@ -69,10 +67,10 @@ void profiler_stdlib_memmove_bbb(uint32_t memmove_test_len);
 @brief - This function is the main code that will analyze the time it take to run mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
+@return - nanosecond: time the profiler took to run
 **********************************************************************************************/
 
-void profiler_stdlib_memset_bbb(uint32_t memset_test_len);
+uint32_t profiler_stdlib_memset_bbb(uint32_t memset_test_len);
 
 
 #endif /*__MEM_PROFILER_BBB_H__*/

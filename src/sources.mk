@@ -14,7 +14,8 @@ ifeq ($(PLATFORM),KL25Z)
 SRCS = ./data1.c ./debug.c ./memory.c ./conversion.c \
 ./arch_arm32.c ./main.c ./gpio.c ./circbuf.c ./uart.c \
 ./system_MKL25Z4.c ./startup_MKL25Z4.S ./dma.c \
-./mem_profiler_kl25z.c ./spi.c ./nordic.c ./uart_circbuf.c ./logger.c ./timestamp.c
+./mem_profiler_kl25z.c ./spi.c ./nordic.c ./uart_circbuf.c \
+./logger.c ./timestamp.c
 
 else ifeq ($(PLATFORM),KL25Z_PRO)
 SRCS = ./memory.c ./main.c ./dma.c \

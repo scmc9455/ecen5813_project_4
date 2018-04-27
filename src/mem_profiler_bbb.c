@@ -26,12 +26,11 @@ Created for ECEN5813
 @brief - This function is the main code that will analyze the time it take to run my_mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
+@return - nanosecond: time the profiler took to run
 **********************************************************************************************/
 
-void profiler_my_memset_bbb(uint32_t memset_test_len)
+uint32_t profiler_my_memset_bbb(uint32_t memset_test_len)
 {
-    printf("Test for BBB my_memset with a mem length of: %d \n", memset_test_len);
     /*necessary variables to run the profiler*/
     /*Variables need to get the clocking correctly*/
     struct timespec start, end, result;
@@ -52,12 +51,11 @@ void profiler_my_memset_bbb(uint32_t memset_test_len)
     result.tv_sec = ((end.tv_sec)-(start.tv_sec)); /*seconds function took*/
     result.tv_nsec = ((end.tv_nsec)-(start.tv_nsec)); /*nanoseconds function took*/
     /*Print the results of the run out to the terminal*/
-    printf("BBB my_memset runs in %ld seconds and %ld nanoseconds\n ***************\n\n",result.tv_sec, result.tv_nsec); 
 
     /*Free allocated space from running code*/
-    free_words(dst_memset_ptr);
+    free_words(dst_memset_ptr);    
 
-    return;
+    return (uint32_t)result.tv_nsec;
 }
 
 /*********************************************************************************************/
@@ -66,12 +64,11 @@ void profiler_my_memset_bbb(uint32_t memset_test_len)
 @brief - This function is the main code that will analyze the time it take to run my_mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
+@return - nanosecond: time the profiler took to run
 **********************************************************************************************/
 
-void profiler_my_memmove_bbb(uint32_t memmove_test_len)
+uint32_t profiler_my_memmove_bbb(uint32_t memmove_test_len)
 {
-    printf("Test for BBB my_memmove with a mem length of: %d \n", memmove_test_len);
     /*necessary variables to run the profiler*/
     /*Variables need to get the clocking correctly*/
     struct timespec start, end, result;
@@ -99,13 +96,12 @@ void profiler_my_memmove_bbb(uint32_t memmove_test_len)
     result.tv_sec = ((end.tv_sec)-(start.tv_sec)); /*seconds function took*/
     result.tv_nsec = ((end.tv_nsec)-(start.tv_nsec)); /*nanoseconds function took*/
     /*Print the results of the run out to the terminal*/
-    printf("BBB my_memmove runs in %ld seconds and %ld nanoseconds\n ***************\n\n",result.tv_sec, result.tv_nsec); 
 
     /*Free allocated space from running code*/
     free_words(dst_memmove_ptr);
     free_words(src_memmove_ptr);
 
-    return;
+    return (uint32_t)result.tv_nsec;
 }
 
 /*********************************************************************************************/
@@ -114,12 +110,11 @@ void profiler_my_memmove_bbb(uint32_t memmove_test_len)
 @brief - This function is the main code that will analyze memmove standard lib functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
+@return - nanosecond: time the profiler took to run
 **********************************************************************************************/
 
-void profiler_stdlib_memmove_bbb(uint32_t memmove_test_len)
+uint32_t profiler_stdlib_memmove_bbb(uint32_t memmove_test_len)
 {
-    printf("Test for BBB stdlib_memmove with a mem length of: %d \n", memmove_test_len);
     /*necessary variables to run the profiler*/
     /*Variables need to get the clocking correctly*/
     struct timespec start, end, result;
@@ -147,13 +142,12 @@ void profiler_stdlib_memmove_bbb(uint32_t memmove_test_len)
     result.tv_sec = ((end.tv_sec)-(start.tv_sec)); /*seconds function took*/
     result.tv_nsec = ((end.tv_nsec)-(start.tv_nsec)); /*nanoseconds function took*/
     /*Print the results of the run out to the terminal*/
-    printf("BBB stdlib_memmove runs in %ld seconds and %ld nanoseconds\n ***************\n\n",result.tv_sec, result.tv_nsec); 
 
     /*Free allocated space from running code*/
     free_words(dst_memmove_ptr);
     free_words(src_memmove_ptr);
 
-    return;
+    return (uint32_t)result.tv_nsec;
 }
 
 
@@ -163,12 +157,10 @@ void profiler_stdlib_memmove_bbb(uint32_t memmove_test_len)
 @brief - This function is the main code that will analyze the time it take to run mem functions
 
 @param - memset_test_len: length of bytes of the test
-@return - counter: returned value of the number of cycles
-**********************************************************************************************/
+@return - nanosecond: time the profiler took to run **********************************************************************************************/
 
-void profiler_stdlib_memset_bbb(uint32_t memset_test_len)
+uint32_t profiler_stdlib_memset_bbb(uint32_t memset_test_len)
 {
-   printf("Test for BBB stdlib_memmove with a mem length of: %d \n", memset_test_len);
     /*necessary variables to run the profiler*/
     /*Variables need to get the clocking correctly*/
     struct timespec start, end, result;
@@ -189,12 +181,10 @@ void profiler_stdlib_memset_bbb(uint32_t memset_test_len)
     result.tv_sec = ((end.tv_sec)-(start.tv_sec)); /*seconds function took*/
     result.tv_nsec = ((end.tv_nsec)-(start.tv_nsec)); /*nanoseconds function took*/
     /*Print the results of the run out to the terminal*/
-    printf("BBB stdlib_memmove runs in %ld seconds and %ld nanoseconds\n ***************\n\n",result.tv_sec, result.tv_nsec); 
-
 
     free_words(dst_memset_ptr);
 
-    return;
+    return (uint32_t)result.tv_nsec;
 }
 
 

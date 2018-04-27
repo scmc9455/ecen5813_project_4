@@ -5,7 +5,7 @@
 #
 #@author - Scott McElroy
 #
-#@data - April 3rd, 2018
+#@data - April 25rd, 2018
 #
 #**************************************************************************#
 
@@ -93,6 +93,10 @@ else ifeq ($(PROJECT),PROJECT3)
 CFLAGS += -DPROJECT3
 SRCS += ./project3.c
 TARGET := project3.elf
+else ifeq ($(PROJECT),PROJECT4_TEST)
+CFLAGS += -DPROJECT4_TEST
+SRCS += ./project4_test.c
+TARGET := project4_test.elf
 else ifeq ($(PROJECT),PROJECT4)
 CFLAGS += -DPROJECT4
 SRCS += ./project4.c

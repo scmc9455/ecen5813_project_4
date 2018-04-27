@@ -26,8 +26,12 @@ Created for ECEN5813
 #include <stdio.h>
 #endif
 
-#ifdef PROJECT4
+#if defined (PROJECT4) && (defined (BBB) || defined (HOST))
 #include "project4.h"
+#endif
+
+#ifdef PROJECT4_TEST
+#include "project4_test.h"
 #endif
 
 #ifdef KL25Z
@@ -40,7 +44,7 @@ Created for ECEN5813
 
 #include <stdint.h>
 
-#ifdef PROJECT4
+#if defined (PROJECT4) || defined (PROJECT4_TEST)
 /*Adding a global variable for the circular buffer pointer*/
 CB_t *buf_ptr;
 #endif
@@ -59,7 +63,11 @@ int main(void)
         project3();
     #endif   
 
-    #ifdef PROJECT4
+    #ifdef PROJECT4_TEST
+        project4_test();
+    #endif
+
+    #if defined (PROJECT4) && (defined (BBB) || defined (HOST))
         project4();
     #endif
 

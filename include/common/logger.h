@@ -89,22 +89,22 @@ typedef struct{
 /*************************/
 /*****Marcro Functions for the KL25Z**************/
 #if defined (KL25Z) && defined (LOG_ENABLE)
-#define LOG_RAW_DATA(data, len); {log_raw_data_kl25z(data, len);}
-#define LOG_RAW_STRING(string); {log_raw_string_kl25z(string);}
-#define LOG_RAW_INT(number); {log_raw_int_kl25z(number);}
-#define LOG_FLUSH(); {log_flush_kl25z();}
-#define LOG_RAW_ITEM(log_structure); {log_raw_item_kl25z(log_structure);}
-#define LOG_CHECKSUM(log_structure); {checksum_add(log_structure);}
+#define LOG_RAW_DATA(data, len); log_raw_data_kl25z(data, len);
+#define LOG_RAW_STRING(string); log_raw_string_kl25z(string);
+#define LOG_RAW_INT(number); log_raw_int_kl25z(number);
+#define LOG_FLUSH(); log_flush_kl25z();
+#define LOG_RAW_ITEM(log_structure); log_raw_item_kl25z(log_structure);
+#define LOG_CHECKSUM(log_structure); checksum_add(log_structure);
 #endif
 
 /*****Marcro Functions for the BBB**************/
-#if (defined (BBB) || defined (HOST)) && defined (LOG_ENABLE)
-#define LOG_RAW_DATA(data, len); {log_raw_data_bbb(data, len);}
-#define LOG_RAW_STRING(string); {log_raw_string_bbb(string);}
-#define LOG_RAW_INT(number); {log_raw_int_bbb(number);}
-#define LOG_FLUSH(); {log_flush_bbb();}
-#define LOG_RAW_ITEM(log_structure); {log_raw_item_bbb(log_structure);}
-#define LOG_CHECKSUM(log_structure); {checksum_add(log_structure);}
+#if (defined (BBB) || defined (HOST)) && (defined (LOG_ENABLE))
+#define LOG_RAW_DATA(data, len); log_raw_data_bbb(data, len);
+#define LOG_RAW_STRING(string); log_raw_string_bbb(string);
+#define LOG_RAW_INT(number); log_raw_int_bbb(number);
+#define LOG_FLUSH(); log_flush_bbb();
+#define LOG_RAW_ITEM(log_structure); log_raw_item_bbb(log_structure);
+#define LOG_CHECKSUM(log_structure); checksum_add(log_structure);
 #endif
 
 /*****Marcro Functions for turning the logger off**************/
