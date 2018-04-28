@@ -28,7 +28,8 @@ This file integrates that logger functionality into the project2 files
 
 void project4(void)
 {
-    uint32_t payload_value;
+    uint32_t payload_value = 0;
+    if(payload_value == 0);
 #if defined LOG_ENABLE
     /*Initialization of the logger variables*/
     /*Start the timer logger*/
@@ -51,8 +52,9 @@ void project4(void)
     packet.log_length = NO_PAYLOAD;
     packet.payload = (uint8_t *)&payload_value;
     LOG_CHECKSUM(packet_ptr);
-    /*Log the logger initialized pointer*/
-    LOG_RAW_ITEM(packet_ptr);        
+    /*Log the logger initialized packet*/
+    LOG_RAW_ITEM(packet_ptr); 
+       
 #endif
     /*System initialized*/
     LOG_SYSTEM_INIT;
@@ -101,24 +103,59 @@ void project4(void)
 #endif
 
 #ifdef KL25Z_PRO
+
+    /*Variables to use*/
+    uint32_t result = 0;
+
     /*********************************************************************/
     /*##########Profiler run for memset using DMA on KL25Z###############*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t memset_dma_kl25z_count_10 = 0;
-    uint32_t memset_dma_kl25z_count_10_32bit = 0;
-    uint32_t memset_dma_kl25z_count_100 = 0;
-    uint32_t memset_dma_kl25z_count_1000 = 0;
-    //uint32_t memset_dma_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memset_dma using systick timer*/
     /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    memset_dma_kl25z_count_10 = profiler_memset_dma_kl25z(MEM_LEN_10, MEM_TYPE8);
-    memset_dma_kl25z_count_10_32bit = profiler_memset_dma_kl25z(MEM_LEN_10, MEM_TYPE32);
-    memset_dma_kl25z_count_100 = profiler_memset_dma_kl25z(MEM_LEN_100, MEM_TYPE8);
-    memset_dma_kl25z_count_1000 = profiler_memset_dma_kl25z(MEM_LEN_1000, MEM_TYPE8);
-    /*5000 will not run because linker is not allowing changes*/
-    //memset_dma_kl25z_count_5000 = profiler_memset_dma_kl25z(MEM_LEN_5000, MEM_TYPE8);
+    LOG_DMA_MEMSET_INFO10;
+    payload_value = profiler_memset_dma_kl25z(MEM_LEN_10, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    payload_value = profiler_memset_dma_kl25z(MEM_LEN_10, MEM_TYPE32);
+
+    /**********/
+    LOG_DMA_MEMSET_INFO100;
+    payload_value = profiler_memset_dma_kl25z(MEM_LEN_100, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    /**********/
+    LOG_DMA_MEMSET_INFO1000;
+    payload_value = profiler_memset_dma_kl25z(MEM_LEN_1000, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+
     /******************************************************************************/
     /*****************End of KL25Z memset_dma test*********************************/
     /******************************************************************************/
@@ -126,21 +163,48 @@ void project4(void)
     /**********************************************************************/
     /*########Profiler run for memmove using DMA on KL25Z#################*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t memmove_dma_kl25z_count_10 = 0;
-    uint32_t memmove_dma_kl25z_count_10_32bit = 0;
-    uint32_t memmove_dma_kl25z_count_100 = 0;
-    uint32_t memmove_dma_kl25z_count_1000 = 0;
-    //uint32_t memmove_dma_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memmove_dma using systick timer*/
     /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    memmove_dma_kl25z_count_10 = profiler_memmove_dma_kl25z(MEM_LEN_10, MEM_TYPE8);
-    memmove_dma_kl25z_count_10_32bit = profiler_memmove_dma_kl25z(MEM_LEN_10, MEM_TYPE32);
-    memmove_dma_kl25z_count_100 = profiler_memmove_dma_kl25z(MEM_LEN_100, MEM_TYPE8);
-    memmove_dma_kl25z_count_1000 = profiler_memmove_dma_kl25z(MEM_LEN_1000, MEM_TYPE8);
-    /*5000 will not run because linker is not allowing changes*/
-    //memmove_dma_kl25z_count_5000 = profiler_memmove_dma_kl25z(MEM_LEN_5000);
+    LOG_DMA_MEMMOVE_INFO10;
+    payload_value = profiler_memmove_dma_kl25z(MEM_LEN_10, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    payload_value = profiler_memmove_dma_kl25z(MEM_LEN_10, MEM_TYPE32);
+
+    LOG_DMA_MEMMOVE_INFO100;
+    payload_value = profiler_memmove_dma_kl25z(MEM_LEN_100, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    LOG_DMA_MEMMOVE_INFO1000;
+    payload_value = profiler_memmove_dma_kl25z(MEM_LEN_1000, MEM_TYPE8);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
 
     /******************************************************************************/
     /*****************End of KL25Z memmove_dma test*********************************/
@@ -149,19 +213,49 @@ void project4(void)
     /*********************************************************************/
     /*#################Profiler run for my_memset on KL25Z###############*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t my_memset_kl25z_count_10 = 0;
-    uint32_t my_memset_kl25z_count_100 = 0;
-    uint32_t my_memset_kl25z_count_1000 = 0;
-    //uint32_t my_memset_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memset_dma using systick timer*/
     /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    my_memset_kl25z_count_10 = profiler_my_memset_kl25z(MEM_LEN_10);
-    my_memset_kl25z_count_100 = profiler_my_memset_kl25z(MEM_LEN_100);
-    my_memset_kl25z_count_1000 = profiler_my_memset_kl25z(MEM_LEN_1000);
-    /*5000 will not run because linker is not allowing changes*/
-    //my_memset_kl25z_count_5000 = profiler_my_memset_kl25z(MEM_LEN_5000);
+   /**********/
+    LOG_MY_MEMSET_INFO10;
+    payload_value = profiler_my_memset_kl25z(MEM_LEN_10);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    /**********/
+    LOG_MY_MEMSET_INFO100;
+    payload_value = profiler_my_memset_kl25z(MEM_LEN_100);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    /**********/
+    LOG_MY_MEMSET_INFO1000;
+    payload_value = profiler_my_memset_kl25z(MEM_LEN_1000);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
     /******************************************************************************/
     /*****************End of KL25Z my_memset test*********************************/
     /******************************************************************************/
@@ -169,19 +263,46 @@ void project4(void)
     /*********************************************************************/
     /*################Profiler run for my_memmove on KL25Z###############*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t my_memmove_kl25z_count_10 = 0;
-    uint32_t my_memmove_kl25z_count_100 = 0;
-    uint32_t my_memmove_kl25z_count_1000 = 0;
-    //uint32_t my_memmove_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memset_dma using systick timer*/
-    /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    my_memmove_kl25z_count_10 = profiler_my_memmove_kl25z(MEM_LEN_10);
-    my_memmove_kl25z_count_100 = profiler_my_memmove_kl25z(MEM_LEN_100);
-    my_memmove_kl25z_count_1000 = profiler_my_memmove_kl25z(MEM_LEN_1000);
-    /*5000 will not run because linker is not allowing changes*/
-    //my_memmove_kl25z_count_5000 = profiler_my_memmove_kl25z(MEM_LEN_5000);
+    /*using 8-bit conversion (the number of conversions are listed as variables)*/ 
+    LOG_MY_MEMMOVE_INFO10;
+    payload_value = profiler_my_memmove_kl25z(MEM_LEN_10);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    LOG_MY_MEMMOVE_INFO100;
+    payload_value = profiler_my_memmove_kl25z(MEM_LEN_100);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
+
+    LOG_MY_MEMMOVE_INFO1000;
+    payload_value = profiler_my_memmove_kl25z(MEM_LEN_1000);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /************/
     /******************************************************************************/
     /*****************End of KL25Z my_memset test*********************************/
     /******************************************************************************/
@@ -189,19 +310,46 @@ void project4(void)
     /*********************************************************************/
     /*#############Profiler run for stdlib memmove on KL25Z##############*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t memmove_kl25z_count_10 = 0;
-    uint32_t memmove_kl25z_count_100 = 0;
-    uint32_t memmove_kl25z_count_1000 = 0;
-    //uint32_t memmove_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memset_dma using systick timer*/
     /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    memmove_kl25z_count_10 = profiler_stdlib_memmove_kl25z(MEM_LEN_10);
-    memmove_kl25z_count_100 = profiler_stdlib_memmove_kl25z(MEM_LEN_100);
-    memmove_kl25z_count_1000 = profiler_stdlib_memmove_kl25z(MEM_LEN_1000);
-    /*5000 will not run because linker is not allowing changes*/
-    //memmove_kl25z_count_5000 = profiler_stdlib_memmove_kl25z(MEM_LEN_5000);
+    LOG_STDLIB_MEMMOVE_INFO10;
+    payload_value = profiler_stdlib_memmove_kl25z(MEM_LEN_10);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
+
+    LOG_STDLIB_MEMMOVE_INFO100;
+    payload_value = profiler_stdlib_memmove_kl25z(MEM_LEN_100);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
+
+    LOG_STDLIB_MEMMOVE_INFO1000;
+    payload_value = profiler_stdlib_memmove_kl25z(MEM_LEN_1000);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
     /******************************************************************************/
     /*****************End of KL25Z my_memset test*********************************/
     /******************************************************************************/
@@ -209,32 +357,49 @@ void project4(void)
     /*********************************************************************/
     /*#############Profiler run for stdlib memset on KL25Z###############*/
     /*********************************************************************/
-    /*needed variables for the program*/
-    uint32_t memset_kl25z_count_10 = 0;
-    uint32_t memset_kl25z_count_100 = 0;
-    uint32_t memset_kl25z_count_1000 = 0;
-    //uint32_t memset_kl25z_count_5000 = 0;
-
     /*profiler code to run the analysis on the memset_dma using systick timer*/
     /*using 8-bit conversion (the number of conversions are listed as variables)*/
-    memset_kl25z_count_10 = profiler_stdlib_memset_kl25z(MEM_LEN_10);
-    memset_kl25z_count_100 = profiler_stdlib_memset_kl25z(MEM_LEN_100);
-    memset_kl25z_count_1000 = profiler_stdlib_memset_kl25z(MEM_LEN_1000);
-    /*5000 will not run because linker is not allowing changes*/
-    //memset_kl25z_count_5000 = profiler_stdlib_memset_kl25z(MEM_LEN_5000);
+    LOG_STDLIB_MEMSET_INFO10;
+    payload_value = profiler_stdlib_memset_kl25z(MEM_LEN_10);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
+
+    LOG_STDLIB_MEMSET_INFO100;
+    payload_value = profiler_stdlib_memset_kl25z(MEM_LEN_100);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
+
+    LOG_STDLIB_MEMSET_INFO1000;
+    payload_value = profiler_stdlib_memset_kl25z(MEM_LEN_1000);
+    if(payload_value > 1)
+    {
+        /*Packet to log result*/
+        LOG_PROFILE_RESULT;
+        result +=1;
+    }
+    payload_value = 0;
+    /*SEND_HEARTBEAT and timestamp*/
+    SEND_HEARTBEAT;
+    /****************/
     /******************************************************************************/
     /*****************End of KL25Z my_memset test*********************************/
     /******************************************************************************/
-
-    /*Variable usage so compiler doesn't output an error*/
-    while(memset_dma_kl25z_count_10 || memset_dma_kl25z_count_100 || memset_dma_kl25z_count_1000 );
-    while(memset_dma_kl25z_count_10_32bit);
-    while(memmove_dma_kl25z_count_10 || memmove_dma_kl25z_count_100 || memmove_dma_kl25z_count_1000 );
-    while(memmove_dma_kl25z_count_10_32bit);
-    while(my_memset_kl25z_count_10 || my_memset_kl25z_count_100 || my_memset_kl25z_count_1000 );
-    while(my_memmove_kl25z_count_10 || my_memmove_kl25z_count_100 || my_memmove_kl25z_count_1000 );
-    while(memmove_kl25z_count_10 || memmove_kl25z_count_100 || memmove_kl25z_count_1000 );
-    while(memset_kl25z_count_10 || memset_kl25z_count_100 || memset_kl25z_count_1000 );
 
 #endif /*KL25Z_PRO*/
 
@@ -242,7 +407,7 @@ void project4(void)
     /******************************************************************************/
     /******************************************************************************/
 
-#if defined (HOST) || defined (BBB_PRO) 
+#if defined (HOST) || defined (BBB_PRO)  || defined (BBB)
     /*Variables to use*/
     uint32_t result = 0;
     /*********************************************************************/
@@ -485,6 +650,8 @@ void project4(void)
 
     /*Profiling has completed*/
      LOG_PROFILE_COMPLETED;
+
+//////log result
 
     return;
 }

@@ -27,8 +27,12 @@ Created for ECEN5813
 #include <stdlib.h>
 #include "gpio.h"
 
+#ifndef __SIM_SCGC4
 #define __SIM_SCGC4 (*((uint32_t *)(0x40048034)))
+#endif
+#ifndef __SIM_SCGC5
 #define __SIM_SCGC5 (*((uint32_t *)(0x40048038)))
+#endif
 #define SPI0_CG     (1 << 22)
 
 

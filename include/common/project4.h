@@ -38,7 +38,7 @@ extern CB_t *buf_ptr;
 #include "nordic.h"
 #endif
 
-#if defined (HOST) || defined (BBB_PRO)
+#if defined (HOST) || defined (BBB_PRO) || defined (BBB)
 #include "mem_profiler_bbb.h"
 #include <stdio.h>
 #endif
@@ -57,7 +57,7 @@ extern CB_t *buf_ptr;
 /*MARCO function for implementing logger*/
 /*Include logger functions for each sendable packet*/
 /*************PACKET CREATORS**********/
-#ifdef LOG_ENABLE
+#if (defined (LOG_ENABLE))
 #define SEND_HEARTBEAT   {\
     packet.log_id = HEARTBEAT;\
     time_value = TIMESTAMP(time_value);\
@@ -560,6 +560,178 @@ extern CB_t *buf_ptr;
 #define LOG_STDLIB_MEMMOVE_INFO100 {}
 #define LOG_STDLIB_MEMMOVE_INFO1000 {}
 #define LOG_STDLIB_MEMMOVE_INFO5000 {}
+#endif
+/***********************************************************/
+#if (defined (KL25Z_PRO) && defined (LOG_ENABLE))
+/*DMA Memset Packet creation*/
+#define LOG_DMA_MEMSET_INFO10  {\
+    packet.log_id = INFO;\
+    packet.log_length = 17;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x73;\
+    *(info_string_ptr+8) = 0x65;\
+    *(info_string_ptr+9) = 0x74;\
+    *(info_string_ptr+10) = 0x20;\
+    *(info_string_ptr+11) = 0x6C;\
+    *(info_string_ptr+12) = 0x65;\
+    *(info_string_ptr+13) = 0x6E;\
+    *(info_string_ptr+14) = 0x20;\
+    *(info_string_ptr+15) = 0x31;\
+    *(info_string_ptr+16) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);}  
+#define LOG_DMA_MEMSET_INFO100  {\
+    packet.log_id = INFO;\
+    packet.log_length = 18;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x73;\
+    *(info_string_ptr+8) = 0x65;\
+    *(info_string_ptr+9) = 0x74;\
+    *(info_string_ptr+10) = 0x20;\
+    *(info_string_ptr+11) = 0x6C;\
+    *(info_string_ptr+12) = 0x65;\
+    *(info_string_ptr+13) = 0x6E;\
+    *(info_string_ptr+14) = 0x20;\
+    *(info_string_ptr+15) = 0x31;\
+    *(info_string_ptr+16) = 0x30;\
+    *(info_string_ptr+17) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);} 
+#define LOG_DMA_MEMSET_INFO1000  {\
+    packet.log_id = INFO;\
+    packet.log_length = 19;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x73;\
+    *(info_string_ptr+8) = 0x65;\
+    *(info_string_ptr+9) = 0x74;\
+    *(info_string_ptr+10) = 0x20;\
+    *(info_string_ptr+11) = 0x6C;\
+    *(info_string_ptr+12) = 0x65;\
+    *(info_string_ptr+13) = 0x6E;\
+    *(info_string_ptr+14) = 0x20;\
+    *(info_string_ptr+15) = 0x31;\
+    *(info_string_ptr+16) = 0x30;\
+    *(info_string_ptr+17) = 0x30;\
+    *(info_string_ptr+18) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);}     
+/*DMA Memmove Packeet Creation*/
+#define LOG_DMA_MEMMOVE_INFO10  {\
+    packet.log_id = INFO;\
+    packet.log_length = 18;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x6D;\
+    *(info_string_ptr+8) = 0x6F;\
+    *(info_string_ptr+9) = 0x76;\
+    *(info_string_ptr+10) = 0x65;\
+    *(info_string_ptr+11) = 0x20;\
+    *(info_string_ptr+12) = 0x6C;\
+    *(info_string_ptr+13) = 0x65;\
+    *(info_string_ptr+14) = 0x6E;\
+    *(info_string_ptr+15) = 0x20;\
+    *(info_string_ptr+16) = 0x31;\
+    *(info_string_ptr+17) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);}  
+#define LOG_DMA_MEMMOVE_INFO100  {\
+    packet.log_id = INFO;\
+    packet.log_length = 19;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x6D;\
+    *(info_string_ptr+8) = 0x6F;\
+    *(info_string_ptr+9) = 0x76;\
+    *(info_string_ptr+10) = 0x65;\
+    *(info_string_ptr+11) = 0x20;\
+    *(info_string_ptr+12) = 0x6C;\
+    *(info_string_ptr+13) = 0x65;\
+    *(info_string_ptr+14) = 0x6E;\
+    *(info_string_ptr+15) = 0x20;\
+    *(info_string_ptr+16) = 0x31;\
+    *(info_string_ptr+17) = 0x30;\
+    *(info_string_ptr+18) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);} 
+#define LOG_DMA_MEMMOVE_INFO1000  {\
+    packet.log_id = INFO;\
+    packet.log_length = 20;\
+    *(info_string_ptr) = 0x64;\
+    *(info_string_ptr+1) = 0x6D;\
+    *(info_string_ptr+2) = 0x61;\
+    *(info_string_ptr+3) = 0x5F;\
+    *(info_string_ptr+4) = 0x6D;\
+    *(info_string_ptr+5) = 0x65;\
+    *(info_string_ptr+6) = 0x6D;\
+    *(info_string_ptr+7) = 0x6D;\
+    *(info_string_ptr+8) = 0x6F;\
+    *(info_string_ptr+9) = 0x76;\
+    *(info_string_ptr+10) = 0x65;\
+    *(info_string_ptr+11) = 0x20;\
+    *(info_string_ptr+12) = 0x6C;\
+    *(info_string_ptr+13) = 0x65;\
+    *(info_string_ptr+14) = 0x6E;\
+    *(info_string_ptr+15) = 0x20;\
+    *(info_string_ptr+16) = 0x31;\
+    *(info_string_ptr+17) = 0x30;\
+    *(info_string_ptr+18) = 0x30;\
+    *(info_string_ptr+19) = 0x30;\
+    packet.payload = info_string_ptr; \
+    time_value = TIMESTAMP(time_value);\
+    packet.timestamp = time_value;\
+    LOG_CHECKSUM(packet_ptr);\
+    LOG_RAW_ITEM(packet_ptr);}   
+#else
+#define LOG_DMA_MEMSET_INFO10     {}
+#define LOG_DMA_MEMSET_INFO100    {}
+#define LOG_DMA_MEMSET_INFO1000   {}  
+#define LOG_DMA_MEMMOVE_INFO10    {}
+#define LOG_DMA_MEMMOVE_INFO100   {}
+#define LOG_DMA_MEMMOVE_INFO1000  {}  
+
 #endif
 
 /*********************************************************************************************/

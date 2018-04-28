@@ -29,11 +29,11 @@ Created for ECEN5813
 #ifndef __LOGGER_H__
 #define __LOGGER_H__
 
-#ifdef KL25Z
+#if defined (KL25Z) || defined (KL25Z_PRO)
 #include "uart_circbuf.h"
 #endif
 
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 #include <stdio.h>    
 #endif
 
@@ -88,7 +88,7 @@ typedef struct{
 /*These below MARCOS will actaully be integrated into the program for logging*/
 /*************************/
 /*****Marcro Functions for the KL25Z**************/
-#if defined (KL25Z) && defined (LOG_ENABLE)
+#if (defined (KL25Z) || defined (KL25Z_PRO)) && defined (LOG_ENABLE)
 #define LOG_RAW_DATA(data, len); log_raw_data_kl25z(data, len);
 #define LOG_RAW_STRING(string); log_raw_string_kl25z(string);
 #define LOG_RAW_INT(number); log_raw_int_kl25z(number);
@@ -98,7 +98,7 @@ typedef struct{
 #endif
 
 /*****Marcro Functions for the BBB**************/
-#if (defined (BBB) || defined (HOST)) && (defined (LOG_ENABLE))
+#if (defined (BBB) || defined (HOST) || defined (BBB_PRO)) && (defined (LOG_ENABLE))
 #define LOG_RAW_DATA(data, len); log_raw_data_bbb(data, len);
 #define LOG_RAW_STRING(string); log_raw_string_bbb(string);
 #define LOG_RAW_INT(number); log_raw_int_bbb(number);
@@ -119,11 +119,11 @@ typedef struct{
 
 /*LOG_ENABLE*/
 /*Define to be able to remove printf and replace with a blank if not BBB or HOST*/
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 #define LOG_PRINTF(x,y);  printf(x,y);
 #define PRINT_NL         printf("\n")
 #define UART_SEND(x);    {}
-#elif defined (KL25Z) /*KL25Z*/
+#elif defined (KL25Z) || defined (KL25Z_PRO) /*KL25Z*/
 #define LOG_PRINTF(x,y);  {}
 #define PRINT_NL         {}
 #define UART_SEND(x);   UART_circbuf_flush_send(x);

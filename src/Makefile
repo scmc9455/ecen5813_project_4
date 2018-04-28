@@ -50,7 +50,7 @@ LDFLAGS += -T ./../platform/MKL25Z128xxx4_flash.ld
 
 else ifeq ($(PLATFORM),BBB)
 CC = arm-linux-gnueabi-gcc
-CFLAGS = $(GENFLAGS) -DVERBOSE -DBBB
+CFLAGS = $(GENFLAGS) -DVERBOSE -DBBB -D_POSIX_C_SOURCE=199309L
 INCLUDES = -I./../include/common \
 
 else ifeq ($(PLATFORM),BBB_PRO)

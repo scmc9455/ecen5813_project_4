@@ -27,7 +27,7 @@ Created for ECEN5813
 @param - time: this is the value that will get changed during an update
 @return - nano: nanosecond time 
 **********************************************************************************************/
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 uint32_t timestamp_bbb(uint32_t time)
 {
     /*Varibles that will store the values for the time capture*/
@@ -51,11 +51,14 @@ uint32_t timestamp_bbb(uint32_t time)
 @param - time: this is the value that will get changed during an update
 @return - nano: nanosecond time 
 **********************************************************************************************/
-#ifdef KL25Z
+#if defined (KL25Z) || defined (KL25Z_PRO)
 uint32_t timestamp_kl25z(uint32_t time)
 {
     /*Create a variable for the return value*/
-    uint32_t nano = time;
+    uint32_t nano;
+
+    /*Grab the nano time*/
+    nano = rtc_read();
 
     /*Return the value of the time in nanoseconds*/
     return nano;
@@ -70,7 +73,7 @@ uint32_t timestamp_kl25z(uint32_t time)
 @param - void
 @return - nano: value to be used for time comparison 
 **********************************************************************************************/
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 uint32_t timestart_bbb(void)
 {
     /*Setup the variables to be able to use for returns and conversion*/
@@ -93,12 +96,16 @@ uint32_t timestart_bbb(void)
 @param - void
 @return - nano: value to be used for time comparison
 **********************************************************************************************/
-#ifdef KL25Z
+#if defined (KL25Z) || defined (KL25Z_PRO)
 uint32_t timestart_kl25z(void)
 {
     /*Setup the variables to be able to use for returns and conversion*/
-    uint32_t nano = 0;
+    uint32_t nano;
 
+    /*Initialization for the rtc module*/
+    rtc_init();
+    /*Log the time stamp for the first value*/
+    nano = rtc_read();
     /*Return the value of the time in nanoseconds*/
     return nano;
 }

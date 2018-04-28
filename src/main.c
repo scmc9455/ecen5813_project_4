@@ -26,7 +26,7 @@ Created for ECEN5813
 #include <stdio.h>
 #endif
 
-#if defined (PROJECT4) && (defined (BBB) || defined (HOST))
+#ifdef PROJECT4
 #include "project4.h"
 #endif
 
@@ -67,7 +67,7 @@ int main(void)
         project4_test();
     #endif
 
-    #if defined (PROJECT4) && (defined (BBB) || defined (HOST))
+    #if defined (PROJECT4)
         project4();
     #endif
 

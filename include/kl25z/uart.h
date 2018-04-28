@@ -99,13 +99,13 @@ typedef enum{
 #define __NVIC_SET_EN_REG     (*((volatile uint32_t *)(0xE000E100)))
 #define __NVIC_CLR_EN_REG     (*((volatile uint32_t *)(0xE000E180)))
 #define __NVIC_SET_REG        (*((volatile uint32_t *)(0xE000E200)))
-#define __disable_NVIC_IRQ(x) (__NVIC_CLR_EN_REG |= (x))
-#define __enable_NVIC_IRQ(x)  (__NVIC_SET_EN_REG |= (x))
+#define disable_NVIC_IRQ(x)   (__NVIC_CLR_EN_REG |= (x))
+#define enable_NVIC_IRQ(x)    (__NVIC_SET_EN_REG |= (x))
 #define __UART0_IRQ_NUM       (1 << 12)
 #define __ALL_IRQ_NUM         (0xFFFF)
 /*Define the Macros to turn on and off the global interrupts*/
-#define START_CRITICAL(x)     (__enable_NVIC_IRQ(x))
-#define END_CRITICAL(x)       (__disable_NVIC_IRQ(x))
+#define START_CRITICAL(x)     (enable_NVIC_IRQ(x))
+#define END_CRITICAL(x)       (disable_NVIC_IRQ(x))
 
 
 extern CB_t *UART_RX_buffer;

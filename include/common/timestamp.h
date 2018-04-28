@@ -21,13 +21,17 @@ Created for ECEN5813
 #include <stdint.h>
 #include <time.h>
 
+#if defined (KL25Z) || defined (KL25Z_PRO)
+#include "rtc.h"
+#endif
+
 /*Function MARCOs for code integration*/
-#if (defined (BBB) || defined (HOST)) && defined (LOG_ENABLE)
+#if (defined (BBB) || defined (HOST) || defined (BBB_PRO)) && defined (LOG_ENABLE)
 #define TIMESTAMP(x)  timestamp_bbb(x)
 #define TIMESTART     timestart_bbb()
 #endif
 
-#if defined (KL25Z) && defined (LOG_ENABLE)
+#if (defined (KL25Z) || defined (KL25Z_PRO)) && defined (LOG_ENABLE)
 #define TIMESTAMP(x)  timestamp_kl25z(x)
 #define TIMESTART     timestart_kl25z()
 #endif
@@ -44,7 +48,7 @@ Created for ECEN5813
 @param - time: this is the value that will get changed during an update
 @return - nano: nanosecond time 
 **********************************************************************************************/
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 uint32_t timestamp_bbb(uint32_t time);
 #endif
 /*********************************************************************************************/
@@ -55,7 +59,7 @@ uint32_t timestamp_bbb(uint32_t time);
 @param - time: this is the value that will get changed during an update
 @return - nano: nanosecond time 
 **********************************************************************************************/
-#ifdef KL25Z
+#if defined (KL25Z) || defined (KL25Z_PRO)
 uint32_t timestamp_kl25z(uint32_t time);
 #endif
 
@@ -67,7 +71,7 @@ uint32_t timestamp_kl25z(uint32_t time);
 @param - void
 @return - nano: value to be used for time comparison 
 **********************************************************************************************/
-#if defined (BBB) || defined (HOST)
+#if defined (BBB) || defined (HOST) || defined (BBB_PRO)
 uint32_t timestart_bbb(void);
 #endif
 
@@ -79,7 +83,7 @@ uint32_t timestart_bbb(void);
 @param - void
 @return - nano: value to be used for time comparison
 **********************************************************************************************/
-#ifdef KL25Z
+#if defined (KL25Z) || defined (KL25Z_PRO)
 uint32_t timestart_kl25z(void);
 #endif
 
