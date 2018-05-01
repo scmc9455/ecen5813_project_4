@@ -18,8 +18,9 @@ Created for ECEN5813
 
 #include "logger.h"
 
-#define BUF_LEN   (50)
+#define BUF_LEN    (50)
 #define NO_PAYLOAD (0)
+#define UART_BAUD  (9600)
 
 #include "circbuf.h"
 #include "timestamp.h"
@@ -53,6 +54,11 @@ extern CB_t *buf_ptr;
 #define MEM_TYPE8          (8)
 #define MEM_TYPE16         (16)
 #define MEM_TYPE32         (32)
+
+/*needed global variables for projects2*/
+CB_t *UART_RX_buffer;
+CB_t *UART_TX_buffer;
+uint8_t receive_flag, EOF_flag;
 
 /*MARCO function for implementing logger*/
 /*Include logger functions for each sendable packet*/
@@ -752,3 +758,4 @@ void project4(void);
 /**********************************************************************************************/
 /************************************End of File***********************************************/
 /**********************************************************************************************/
+

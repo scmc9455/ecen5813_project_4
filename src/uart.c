@@ -57,7 +57,7 @@ status_e UART_configure(uint32_t baud)
     __SIM_SCGC4 |=SIM_UART0_CG;
     /*Change the UART0 Clock to MCGFLLCLK*/
     __SIM_SOPT2 |= SIM_UART0SRC_MCGFLLCLK; /*Clock=21MHz is sourcing the UART*/
-    __SIM_SOPT2 &= SIM_PLLFLLSEL; /*Selects the FLL for the input*/
+    __SIM_SOPT2 &= ~SIM_PLLFLLSEL; /*Selects the FLL for the input*/
     /*UART open drain disabled and TX/RX from pins*/
     __SIM_SOPT5 &= ~(SIM_UART0ODE + SIM_UART0RXSRC + SIM_UART0TXSRC);
     /*Set the port characteristics*/

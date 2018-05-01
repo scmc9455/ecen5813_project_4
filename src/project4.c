@@ -37,10 +37,19 @@ void project4(void)
     /*Allocate the memory for the string*/
     uint8_t *info_string_ptr = (uint8_t *)malloc(25);
     time_value = TIMESTART;
+
+    /*This line is set to configure the circular buffer and UART if KL25Z*/
+#if defined (KL25Z) || defined (KL25Z_PRO)
+    buf_ptr = UART_circbuf_configure(UART_BAUD, BUF_LEN);
+#endif
+    /*This line is set to configure the circular buffer and UART if BBB and HOST*/
+#if defined (BBB) || defined (BBB_PRO) || defined (HOST)
     /*Variables for the circular buffer*/
     CB_t **buf_ptr_temp = &buf_ptr;
     /*Call for buffer init of BUF_LEN*/
     CB_init(buf_ptr_temp,BUF_LEN);
+#endif
+
     /*Setup item packet*/
     log_item_t packet;
     log_item_t *packet_ptr = &packet;
@@ -659,3 +668,4 @@ void project4(void)
 /**********************************************************************************************/
 /************************************End of File***********************************************/
 /**********************************************************************************************/
+

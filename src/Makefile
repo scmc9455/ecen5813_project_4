@@ -157,6 +157,14 @@ upload_BBB_project3: clean $(TARGET) LOAD3
 LOAD3:
 	sudo scp project3.elf root@192.168.7.2:/root/ecen5813_project_3
 
+#***************************
+.PHONY: upload_BBB_project4
+upload_BBB_project4: clean $(TARGET) LOAD4
+
+.PHONY: LOAD4
+LOAD4:
+	sudo scp project4.elf root@192.168.7.2:/root/ecen5813_project_4
+
 #**********Command allows direct connect to BBB************************************
 .PHONY: BBB_connect
 BBB_connect: 
