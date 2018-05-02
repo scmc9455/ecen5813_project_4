@@ -183,7 +183,7 @@ def item_string(line_data,n):
 def packet_print(line_data):
      n = 0
      logaddr = 0
-     while (line_data):  
+     while (n < len(line_data)):  
          first_char = ord(line_data[(n+0)])
          #function to decide whether the payload is a string or item
          if (first_char == 6):         
@@ -221,3 +221,7 @@ main()
 #******************************************************************************************
 #****************End of File***************************************************************
 #******************************************************************************************
+
+
+
+

@@ -52,6 +52,8 @@ void rtc_init(void)
     __RTC_CR |= RTC_CLKO; /*output clock to peripherials*/
     __RTC_SR |= RTC_TCE; /*enable counter*/
 
+    __RTC_IER &= 0x00; /*Turn off interrupts*/
+
     /*Need to setup for interrupts*/
 
    return;
