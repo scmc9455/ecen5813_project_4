@@ -73,57 +73,45 @@ def module_type(packet):
         return "TEST"
 
 #*********************************************************************************************
-#@brief- this function grabs a character
-#
-#@param- data: contents of the character
-#@param- n: value of address to pull
-#@return- value
-#*********************************************************************************************
-def data_capture(line_data, n):
-    i
-    return
-
-#*********************************************************************************************
 #@brief- this function is to print an item from the logger
 #
 #@param- line_data: this is the packet item to be sent to the function
 #@param- n: value to be used for address
 #@return- logaddr2: value to be return (pointer of the address need to use in a loop)
 #*********************************************************************************************
-def item_decode(line_data,n):
+def item_decode(line_data):
     #packet decoding from the log file      
-    first_char = line_data[(n+0)]
-    second_char = line_data[(n+1)]
+    first_char = line_data[0]
+    second_char = line_data[1]
 
     #log_id and module_id variables
     log_id = log_type(int(first_char,16))
     module_id = module_type(int(second_char,16))
 
     #decode the timestamp
-    time1 = line_data[(n+2)]
-    print time1
-    time2 = line_data[(n+3)]
-    print time2
-    time3 = line_data[(n+4)]
-    print time3
-    time4 = line_data[(n+5)] 
-    timestamp = time1 + time2 + time3 + time4
+    time1 = line_data[2]
+    time2 = line_data[3]
+    time3 = line_data[4]
+    time4 = line_data[5]
+    timestamp = [time4, time3, time2, time1]
+    timestamp = ''.join(timestamp)
     timestamp = int(timestamp,16)
 
     #detemine and capture log length
-    log_len1 = line_data[(n+6)]
-    log_len2 = line_data[(n+7)]
-    log_len3 = line_data[(n+8)]
-    log_len4 = line_data[(n+9)]
-    log_len = log_len4 + log_len3 + log_len2 + log_len1
+    log_len1 = line_data[6]
+    log_len2 = line_data[7]
+    log_len3 = line_data[8]
+    log_len4 = line_data[9]
+    log_len = [log_len4, log_len3, log_len2, log_len1]
+    log_len = ''.join(log_len)
     log_len = int(log_len,16)
     #move the log pointer
-    logaddr = (n+10) + log_len
+    logaddr = (10) + log_len
 
-    if (logaddr > (n+10)):
-        payload = line_data[(n+10):logaddr]
-        payload = payload.encode("hex")
-        payload = str(payload)
+    if (logaddr > (10)):
+        payload = line_data[(10):logaddr]
+        payload = ''.join(payload)
+        payload = int(payload,16)
     else:
         payload = "No Payload"
 
@@ -132,15 +120,13 @@ def item_decode(line_data,n):
     checksum2 = line_data[(logaddr+1)]
     checksum3 = line_data[(logaddr+2)]
     checksum4 = line_data[(logaddr+3)]
-    checksum = [checksum4, checksum1, checksum3, checksum2]
+    checksum = [checksum4, checksum3, checksum2, checksum1]
     checksum = ''.join(checksum)
     checksum = int(checksum,16)
-    logaddr2 = logaddr + 4
-    logaddr2 = logaddr + 1 # removes a newline character
 
     print timestamp,"ns :",log_id," ",module_id,":",payload,"-checksum:",checksum
     print ""
-    return logaddr2
+    return
 
 #*********************************************************************************************
 #@brief- this function is to print an item from the logger that is in the string format
@@ -149,48 +135,54 @@ def item_decode(line_data,n):
 #@param- n: value to be used for address
 #@return- logaddr2: value to be return (pointer of the address need to use in a loop)
 #*********************************************************************************************
-def item_string(line_data,n):
+def item_string(line_data):
     #packet decoding from the log file      
-    first_char = int(line_data[(n+0)])
-    second_char = int(line_data[n+1])
+    first_char = int(line_data[0])
+    second_char = int(line_data[1])
 
     #log_id and module_id variables
     log_id = log_type(first_char)
     module_id = module_type(second_char)
 
     #decode the timestamp
-    time1 = int(line_data[(n+2)]) * (2**24)
-    time2 = int(line_data[(n+3)]) * (2**16)
-    time3 = int(line_data[(n+4)]) * (2**8)
-    time4 = int(line_data[(n+5)]) 
-    timestamp = time1 + time2 + time3 + time4
+    time1 = line_data[2]
+    time2 = line_data[3]
+    time3 = line_data[4]
+    time4 = line_data[5]
+    timestamp = [time4, time3, time2, time1]
+    timestamp = ''.join(timestamp)
+    timestamp = int(timestamp,16)
 
     #detemine and capture log length
-    log_len1 = int(line_data[(n+6)])
-    log_len2 = int(line_data[(n+7)]) * (2**8)
-    log_len3 = int(line_data[(n+8)]) * (2**16)
-    log_len4 = int(line_data[(n+9)]) * (2**24)
-    log_len = log_len4 + log_len3 + log_len2 + log_len1
-
+    log_len1 = line_data[6]
+    log_len2 = line_data[7]
+    log_len3 = line_data[8]
+    log_len4 = line_data[9]
+    log_len = [log_len4, log_len3, log_len2, log_len1]
+    log_len = ''.join(log_len)
+    log_len = int(log_len,16)
     #move the log pointer
-    logaddr = (n+10) + log_len
+    logaddr = (10) + log_len
 
-    if (logaddr > (n+10)):
-        payload = line_data[(n+10):logaddr]
+    if (logaddr > (10)):
+        payload = line_data[(10):logaddr]
+        payload = ''.join(payload)
+        payload = payload.decode("hex")
     else:
         payload = "No Payload"
 
     #checksum value
-    checksum1 = int(line_data[(logaddr)])
-    checksum2 = int(line_data[(logaddr+1)]) * (2**8)
-    checksum3 = int(line_data[(logaddr+2)]) * (2**16)
-    checksum4 = int(line_data[(logaddr+3)]) * (2**24)
-    checksum = checksum4 + checksum3 + checksum2 + checksum1
-    logaddr2 = logaddr + 4
+    checksum1 = line_data[(logaddr)]
+    checksum2 = line_data[(logaddr+1)]
+    checksum3 = line_data[(logaddr+2)]
+    checksum4 = line_data[(logaddr+3)]
+    checksum = [checksum4, checksum3, checksum2, checksum1]
+    checksum = ''.join(checksum)
+    checksum = int(checksum,16)
 
     print timestamp,"ns :",log_id," ",module_id,":",payload,"-checksum:",checksum
     print ""
-    return logaddr2
+    return
 
 #*********************************************************************************************
 #@brief- this function prints out the details of the packet
@@ -198,23 +190,16 @@ def item_string(line_data,n):
 #@param- packet: contents of the log file
 #@return- void
 #*********************************************************************************************
-def packet_print(line_data):
-     n = 0
-     logaddr = 0
-     while (line_data):  
-         first_char = int(line_data[(n+0)])
+def packet_print(line_data):  
+         first_char = int(line_data[0],16)
          #function to decide whether the payload is a string or item
-         if (first_char == 6):         
-             logaddr = item_string(line_data,n)
-             n = logaddr
-         elif (first_char < 20):
-             logaddr = item_decode(line_data,n)
-             n = logaddr
+         if (first_char == 6):        
+             logaddr = item_string(line_data)
+         elif (first_char < "20"):
+             logaddr = item_decode(line_data)
          else:
          #value so the next item can be logged
-             print "Else",first_char
-             n = n + 1
-
+             print "Not a valid log"
 
 #***************************************************************************************
 #@brief- This is the main function definition that will be in charge of the entire flow
@@ -224,10 +209,12 @@ def packet_print(line_data):
 #*****************************************************************************************
 def main():
     with open("host_log_file.txt","rba") as file:
-        line = file.read()
-        print line
-
-        packet_print(line)
+        line = file.readlines()
+        n = 0
+        while (line):
+            element = line[n].split()
+            packet_print(element)
+            n = n + 1
 
 #************************
 #calling the main function
